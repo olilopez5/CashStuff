@@ -1,7 +1,7 @@
 package com.example.cashstuff.data
 
 data class Movement(
-val id: Int = 0,
+val id: Long = 0L,
 val amount: Double,
 val date: String             // Store as ISO string: "2025-04-29"
 ) {

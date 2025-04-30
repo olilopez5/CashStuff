@@ -15,7 +15,7 @@ class MovementDAO(context: Context) {
         val values = ContentValues().apply {
             put(Movement.COLUMN_NAME_AMOUNT, movement.amount)
             put(Movement.COLUMN_NAME_DATE, movement.date)
-            
+
         }
         try {
             val newRowId = db.insert(Movement.TABLE_NAME, null, values)
@@ -30,12 +30,17 @@ class MovementDAO(context: Context) {
     fun update(movement: Movement) {
         val db = databaseManager.writableDatabase
         val values = ContentValues().apply {
-            put(Movement.COLUMN_NAME_TITLE, movement.amount)
+            put(Movement.COLUMN_NAME_AMOUNT, movement.amount)
             put(Movement.COLUMN_NAME_DATE, movement.date)
 
         }
         try {
-            db.update(Movement.TABLE_NAME, values, "${Movement.COLUMN_NAME_ID} = ${movement.id}", null)
+            db.update(
+                Movement.TABLE_NAME,
+                values,
+                "${Movement.COLUMN_NAME_ID} = ${movement.id}",
+                null
+            )
             Log.i("DATABASE", "Update movement: ${movement.id}")
         } catch (e: Exception) {
             e.printStackTrace()
@@ -98,7 +103,8 @@ class MovementDAO(context: Context) {
                 null,
                 null,
                 null,
-                Movement.COLUMN_NAME_DESCRIPTION
+                null
+
             )
             while (cursor.moveToNext()) {
                 val movement = cursorToMovement(cursor)
@@ -112,7 +118,6 @@ class MovementDAO(context: Context) {
         return movementList
     }
 
-   
 
     fun sortedByDate(ascending: Boolean = true): List<Movement> {
         val db = databaseManager.readableDatabase
@@ -142,8 +147,9 @@ class MovementDAO(context: Context) {
 
     private fun cursorToMovement(cursor: Cursor): Movement {
         val id = cursor.getLong(cursor.getColumnIndexOrThrow(Movement.COLUMN_NAME_ID))
-        val amount = cursor.getString(cursor.getColumnIndexOrThrow(Movement.COLUMN_NAME_AMOUNT))
-        val date = cursor.getLong(cursor.getColumnIndexOrThrow(Movement.COLUMN_NAME_DATE))
+        val amount = cursor.getDouble(cursor.getColumnIndexOrThrow(Movement.COLUMN_NAME_AMOUNT))
+        val date = cursor.getString(cursor.getColumnIndexOrThrow(Movement.COLUMN_NAME_DATE))
 
-        return Movement(id,amount, date)
+        return Movement(id, amount, date)
     }
+}
